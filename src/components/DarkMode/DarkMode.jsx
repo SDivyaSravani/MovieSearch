@@ -1,51 +1,37 @@
 import React from "react";
-
 import "./DarkMode.css";
-import { ReactComponent as Sun } from "../../assets/Sun.svg";
-import { ReactComponent as Moon } from "../../assets/Moon.svg";
+import Sun from '/src/assets/Sun.svg?react'; // Added ?react
+import Moon from '/src/assets/Moon.svg?react'; // Added ?react
 
 const DarkMode = () => {
-    const setDarkTheme = () => {
-        document.querySelector("body").setAttribute("data-theme", "dark");
-        localStorage.setItem("selectedTheme", "dark");
-    };
+  const [theme, setTheme] = React.useState(
+    localStorage.getItem("selectedTheme") || "dark"
+  );
 
-    const setLightTheme = () => {
-        document.querySelector("body").setAttribute("data-theme", "light");
-        localStorage.setItem("selectedTheme", "light");
-    };
+  React.useEffect(() => {
+    document.body.setAttribute("data-theme", theme);
+    localStorage.setItem("selectedTheme", theme);
+  }, [theme]);
 
-    const selectedTheme = localStorage.getItem("selectedTheme");
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
 
-    if (selectedTheme === "light") {
-        setLightTheme();
-    } else {
-        setDarkTheme();
-    }
-
-    const toggleTheme = (e) => {
-        if (e.target.checked) {
-            setDarkTheme();
-        } else {
-            setLightTheme();
-        }
-    };
-
-    return (
-        <div className='dark_mode'>
-            <input
-                className='dark_mode_input'
-                type='checkbox'
-                id='darkmode-toggle'
-                onChange={toggleTheme}
-                defaultChecked={selectedTheme !== "light"}
-            />
-            <label className='dark_mode_label' htmlFor='darkmode-toggle'>
-                <Sun />
-                <Moon />
-            </label>
-        </div>
-    );
+  return (
+    <div className='dark_mode'>
+      <input
+        className='dark_mode_input'
+        type='checkbox'
+        id='darkmode-toggle'
+        onChange={toggleTheme}
+        checked={theme === "dark"}
+      />
+      <label className='dark_mode_label' htmlFor='darkmode-toggle'>
+        <Sun className="theme-icon" />
+        <Moon className="theme-icon" />
+      </label>
+    </div>
+  );
 };
 
 export default DarkMode;
